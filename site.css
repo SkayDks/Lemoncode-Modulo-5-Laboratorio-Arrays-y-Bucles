@@ -1,0 +1,66 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h1{
+  margin: 5px 0;
+}
+
+.container {
+  margin: 0 auto;
+  width: 25%;
+  min-width: 350px;
+  border: 1px solid black;
+  display: flex;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  flex: 50%;
+  padding: 5px;
+  margin: 2px;
+  border: 1px solid black;
+}
+
+.row {
+  flex: 100%;  
+  display: flex;
+  flex-direction: row;
+}
+
+.cartTitle {
+  flex:100%;
+  text-align: left;
+  padding-bottom: 5px;
+}
+
+.cartContainer {
+  flex: 100%;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.cartFooter {
+  padding-top: 5px;
+  text-align: right;
+  flex: 100%;
+}
+
+.product{
+  display: flex;
+  border: 1px solid black;
+  flex-direction: column;
+  text-align: left;
+  margin: 5px 2px;
+  padding: 5px;
+}
+
+.name {
+  flex: auto;
+  font-size: 1.1em;
+}
+
+.price {    
+  text-align: right;
+}
