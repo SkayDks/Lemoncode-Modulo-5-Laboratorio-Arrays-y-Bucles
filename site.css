@@ -33,6 +33,8 @@ h1{
   flex:100%;
   text-align: left;
   padding-bottom: 5px;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .cartContainer {
@@ -44,7 +46,9 @@ h1{
 .cartFooter {
   padding-top: 5px;
   text-align: right;
+  display: flex;
   flex: 100%;
+  flex-direction: column;
 }
 
 .product{

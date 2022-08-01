@@ -29,53 +29,124 @@ const carrito = [
   },
 ];
 
-/*
-Mostrar el carrito de la compra.
---Listar todos los productos.
---Eliminar el producto con id 54657 del carrito de la compra.
---Calcular el total del carrito de la compra (el coste de una línea es precio * cantidad).
---Filtrar por los productos que sean prime.
-Opcional:
---Si todos los productos son prime mostrar un mensaje "Pedido sin gastos de envío", si no "Este pedido
---tiene gastos de envío".
---Mostrar el carrito en un listado de html básico.
---Aplicar un descuento del 5% si la compra es mayor de 100 €. 
-*/
-function createItem(item) {
-  let atributeItems = ["product", "row", "name", "price", "count", "premium"];
-  let elements = ["div", "span"];
-  let nodeElement, node, parentNode, premium;
+function totalPrice(object) {
+  let total = 0;
+  for (reserve of object) {
+    total += reserve.price * reserve.count;
+  }
+  return total;
+}
 
-  for (k = 0; k < item.length; k++) {
-    for (i = 0; i < atributeItems.length; i++) {
-      nodeElement = i < 2 ? elements[0] : elements[1];
+function discount(object) {
+  let node;
+  let total = totalPrice(object);
+  let discount = 0.05;
 
-      node = document.createElement(nodeElement);
-      node.setAttribute("class", atributeItems[i]);
-
-      if (i >= 2) {
-        if (atributeItems[i] === "premium")
-          node.innerText = item[k][atributeItems[i]] ? "Premium" : "";
-        else node.innerText = item[k][atributeItems[i]];
-      }
-
-      if (i === 0) parentNode = node;
-      else {
-        switch (i) {
-          case 1:
-          case 4:
-          case 5:
-            parentNode.appendChild(node);
-            break;
-          default:
-            parentNode.firstChild.appendChild(node);
-            break;
-        }
-      }
-    }
-
-    document.querySelector(".cartContainer").appendChild(parentNode);
+  if (total > 100) {
+    node = document.querySelector(".cartFooter > :last-child");
+    node.innerText =
+      "Total dicounted(5%): " + (total - total * discount).toFixed(2) + "€";
   }
 }
 
-createItem(carrito);
+function premiumItem(object) {
+  let cartPremium = [];
+  for (itemCart of object) {
+    if (itemCart.premium) cartPremium.push(itemCart);
+  }
+  return cartPremium;
+}
+
+function shippingCosts(object) {
+  let isNoPremium = false;
+  for (i in object) {
+    isNoPremium = isNoPremium || object[i].premium === false;
+  }
+  text = isNoPremium
+    ? "Este pedido tiene gastos de envío"
+    : "Pedido sin gastos de envío";
+  node = document.querySelector(".cartFooter > :first-child");
+  node.innerText = text;
+}
+
+function createItem(item) {
+  let atributeItems = ["product", "row", "name", "price", "count", "premium"];
+  let elements = ["div", "span"];
+  let nodeElement, node, fatherNode;
+
+  for (i = 0; i < atributeItems.length; i++) {
+    nodeElement = i < 2 ? elements[0] : elements[1];
+
+    node = document.createElement(nodeElement);
+    node.setAttribute("class", atributeItems[i]);
+
+    if (i >= 2) {
+      node.innerText =
+        item[atributeItems[i]] === true
+          ? "Premium"
+          : item[atributeItems[i]] === false
+          ? ""
+          : (node.innerText = item[atributeItems[i]]);
+    }
+
+    if (i === 0) fatherNode = node;
+    else {
+      switch (i) {
+        case 1:
+        case 4:
+        case 5:
+          fatherNode.appendChild(node);
+          break;
+        default:
+          fatherNode.firstChild.appendChild(node);
+          break;
+      }
+    }
+    document.querySelector(".cartContainer").appendChild(fatherNode);
+  }
+}
+
+function createCart(object) {
+  for (itemCart of object) {
+    createItem(itemCart);
+  }
+}
+
+function deleteItem(object, id) {
+  let item;
+  for (i in object) {
+    console.log(object[i].id === id);
+    if (object[i].id === id) item = i;
+  }
+  object.splice(item, 1);
+  console.log(object);
+}
+
+function print(object) {
+  createCart(object);
+  shippingCosts(object);
+  discount(object);
+  document.querySelector(".totalPrice").innerHTML =
+    totalPrice(object).toFixed(2);
+}
+
+function handlerOnlyPremium(e) {
+  let fatherNode = document.querySelector(".cartContainer");
+  let fatherNodeCount = fatherNode.childElementCount;
+  let cart = e.target.checked ? premiumItem(carrito) : carrito;
+
+  if (fatherNodeCount !== 0) {
+    for (i = 0; i < fatherNodeCount; i++) {
+      fatherNode.firstChild.remove();
+    }
+  }
+  print(cart);
+}
+
+document
+  .querySelector("#onlyPremium")
+  .addEventListener("click", handlerOnlyPremium);
+
+deleteItem(carrito, 54657);
+
+print(carrito);

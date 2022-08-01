@@ -11,14 +11,18 @@
   <body>
     <div class="container">
       <div class="column">
-        <div class="cartTitle">
+        <div class="cartTitle row">
           <h1>Cart</h1>
+          <div>
+            <label for="onlyPremium">Premium</label>
+            <input type="checkbox" name="onlyPremium" id="onlyPremium" />
+          </div>
         </div>
-        <div class="cartContainer">
-          
-        </div>
+        <div class="cartContainer"></div>
         <div class="cartFooter">
-          <span>Total: </span>
+          <span></span>
+          <span>Total: <span class="totalPrice"></span>€</span>
+          <span></span>
         </div>
       </div>
     </div>
