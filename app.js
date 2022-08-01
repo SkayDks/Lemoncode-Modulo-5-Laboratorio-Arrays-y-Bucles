@@ -70,16 +70,22 @@ function shippingCosts(object) {
 }
 
 function createItem(item) {
-  let atributeItems = ["product", "row", "name", "price", "count", "premium"];
+  let atributeItems = [
+    "product",
+    "row",
+    "name",
+    "price",
+    "count",
+    "premium",
+    "delete",
+  ];
   let elements = ["div", "span"];
   let nodeElement, node, fatherNode;
 
   for (i = 0; i < atributeItems.length; i++) {
     nodeElement = i < 2 ? elements[0] : elements[1];
-
     node = document.createElement(nodeElement);
     node.setAttribute("class", atributeItems[i]);
-
     if (i >= 2) {
       node.innerText =
         item[atributeItems[i]] === true
@@ -88,13 +94,18 @@ function createItem(item) {
           ? ""
           : (node.innerText = item[atributeItems[i]]);
     }
-
+    if (i === 6) {
+      node.setAttribute("id", item.id)
+      node.innerText = "Eliminar";
+      node.addEventListener("click", handlerDeleteItem);
+    }
     if (i === 0) fatherNode = node;
     else {
       switch (i) {
         case 1:
         case 4:
         case 5:
+        case 6:
           fatherNode.appendChild(node);
           break;
         default:
@@ -115,14 +126,19 @@ function createCart(object) {
 function deleteItem(object, id) {
   let item;
   for (i in object) {
-    console.log(object[i].id === id);
     if (object[i].id === id) item = i;
   }
   object.splice(item, 1);
-  console.log(object);
 }
 
 function print(object) {
+  let fatherNode = document.querySelector(".cartContainer");
+  let fatherNodeCount = fatherNode.childElementCount;
+  if (fatherNodeCount !== 0) {
+    for (i = 0; i < fatherNodeCount; i++) {
+      fatherNode.firstChild.remove();
+    }
+  }
   createCart(object);
   shippingCosts(object);
   discount(object);
@@ -131,22 +147,19 @@ function print(object) {
 }
 
 function handlerOnlyPremium(e) {
-  let fatherNode = document.querySelector(".cartContainer");
-  let fatherNodeCount = fatherNode.childElementCount;
   let cart = e.target.checked ? premiumItem(carrito) : carrito;
-
-  if (fatherNodeCount !== 0) {
-    for (i = 0; i < fatherNodeCount; i++) {
-      fatherNode.firstChild.remove();
-    }
-  }
+  
   print(cart);
+}
+
+function handlerDeleteItem(e) {
+  deleteItem(carrito, parseInt(e.target.id));
+  print(carrito);
 }
 
 document
   .querySelector("#onlyPremium")
   .addEventListener("click", handlerOnlyPremium);
 
-deleteItem(carrito, 54657);
 
 print(carrito);

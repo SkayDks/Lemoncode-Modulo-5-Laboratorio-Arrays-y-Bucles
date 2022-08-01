@@ -68,3 +68,15 @@ h1{
 .price {    
   text-align: right;
 }
+
+.delete{
+  font-size: small;
+  font-weight: 600;
+  width: min-content;
+  
+}
+
+.delete:hover {
+  cursor: pointer;
+ color: blue;
+}
